@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Cocktail } from '../cocktails/entities/cocktail.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Comment {
@@ -6,14 +8,14 @@ export class Comment {
   id: number;
 
   @Column()
-  cocktail: any;
-
-  @Column()
-  author: any;
-
-  @Column()
   content: string;
 
   @Column()
   date: Date;
+
+  @ManyToOne(() => Cocktail, (cocktail) => cocktail.comments)
+  cocktail: Cocktail;
+
+  @ManyToOne(() => User, (user) => user.comments)
+  author: User;
 }

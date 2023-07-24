@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Ingredient } from 'src/modules/ingredients/ingredient.entity';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Cocktail } from './cocktail.entity';
 
 @Entity()
 export class IngredientItem {
@@ -6,14 +8,14 @@ export class IngredientItem {
   id: number;
 
   @Column()
-  cocktail: any;
-
-  @Column()
-  ingredient: any;
-
-  @Column()
   unit: string;
 
   @Column()
   quantity: number;
+
+  @ManyToOne(() => Cocktail, (cocktail) => cocktail.ingredientItem)
+  cocktail: Cocktail;
+
+  @ManyToOne(() => Ingredient, (ingredient) => ingredient.ingredientItem)
+  ingredient: Ingredient;
 }

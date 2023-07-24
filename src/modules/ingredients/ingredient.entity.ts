@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { IngredientItem } from '../cocktails/entities/ingredientItem.entity';
 
 @Entity()
 export class Ingredient {
@@ -10,4 +11,10 @@ export class Ingredient {
 
   @Column()
   isAlcoholic: boolean;
+
+  @OneToMany(
+    () => IngredientItem,
+    (ingredientItem) => ingredientItem.ingredient,
+  )
+  ingredientItem: IngredientItem[];
 }

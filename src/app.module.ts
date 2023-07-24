@@ -10,6 +10,8 @@ import { Cocktail } from './modules/cocktails/entities/cocktail.entity';
 import { Comment } from './modules/comments/comment.entity';
 import { Rating } from './modules/ratings/rating.entity';
 import { IngredientsModule } from './modules/ingredients/ingredients.module';
+import { Ingredient } from './modules/ingredients/ingredient.entity';
+import { IngredientItem } from './modules/cocktails/entities/ingredientItem.entity';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { IngredientsModule } from './modules/ingredients/ingredients.module';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: 'cocktails_db',
-      entities: [User, Cocktail, Comment, Rating],
+      entities: [User, Cocktail, Comment, Rating, Ingredient, IngredientItem],
       synchronize: true,
     }),
     UsersModule,
