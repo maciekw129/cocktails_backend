@@ -12,6 +12,9 @@ import { Rating } from './modules/ratings/rating.entity';
 import { IngredientsModule } from './modules/ingredients/ingredients.module';
 import { Ingredient } from './modules/ingredients/ingredient.entity';
 import { IngredientItem } from './modules/cocktails/entities/ingredientItem.entity';
+import { AuthModule } from './auth/auth.module';
+import { AtGuard } from './auth/guards/at.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -31,8 +34,14 @@ import { IngredientItem } from './modules/cocktails/entities/ingredientItem.enti
     CommentsModule,
     RatingsModule,
     IngredientsModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
+    },
+  ],
 })
 export class AppModule {}

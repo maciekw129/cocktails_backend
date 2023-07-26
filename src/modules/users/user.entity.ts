@@ -2,14 +2,15 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToOne,
   OneToMany,
+  Unique,
 } from 'typeorm';
 import { Cocktail } from '../cocktails/entities/cocktail.entity';
 import { Comment } from '../comments/comment.entity';
 import { Rating } from '../ratings/rating.entity';
 
 @Entity()
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,7 +21,19 @@ export class User {
   @Column()
   lastName: string;
 
-  @ManyToOne(() => Cocktail, (cocktail) => cocktail.author)
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ nullable: true })
+  hashedRt?: string;
+
+  @Column()
+  createdAt: Date;
+
+  @OneToMany(() => Cocktail, (cocktail) => cocktail.author)
   cocktails: Cocktail[];
 
   @OneToMany(() => Comment, (comment) => comment.author)

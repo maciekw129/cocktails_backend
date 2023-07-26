@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
 import { IngredientItem } from './ingredientItem.entity';
 import { User } from 'src/modules/users/user.entity';
 import { Comment } from 'src/modules/comments/comment.entity';
@@ -18,7 +24,7 @@ export class Cocktail {
   @Column()
   preparation: string;
 
-  @OneToMany(() => User, (user) => user.cocktails)
+  @ManyToOne(() => User, (user) => user.cocktails)
   author: User;
 
   @OneToMany(() => IngredientItem, (ingredientItem) => ingredientItem.cocktail)
