@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { IngredientItem } from '../cocktails/entities/ingredientItem.entity';
+import { IngredientItem } from './ingredientItem.entity';
 
 @Entity()
 export class Ingredient {
@@ -15,6 +15,7 @@ export class Ingredient {
   @OneToMany(
     () => IngredientItem,
     (ingredientItem) => ingredientItem.ingredient,
+    { cascade: true },
   )
   ingredientItem: IngredientItem[];
 }

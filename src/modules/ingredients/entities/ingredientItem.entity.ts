@@ -1,6 +1,6 @@
-import { Ingredient } from 'src/modules/ingredients/ingredient.entity';
+import { Ingredient } from 'src/modules/ingredients/entities/ingredient.entity';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Cocktail } from './cocktail.entity';
+import { Cocktail } from '../../cocktails/cocktail.entity';
 
 @Entity()
 export class IngredientItem {

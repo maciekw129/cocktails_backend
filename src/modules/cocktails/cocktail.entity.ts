@@ -5,7 +5,7 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { IngredientItem } from './ingredientItem.entity';
+import { IngredientItem } from '../ingredients/entities/ingredientItem.entity';
 import { User } from 'src/modules/users/user.entity';
 import { Comment } from 'src/modules/comments/comment.entity';
 import { Rating } from 'src/modules/ratings/rating.entity';
@@ -27,7 +27,11 @@ export class Cocktail {
   @ManyToOne(() => User, (user) => user.cocktails)
   author: User;
 
-  @OneToMany(() => IngredientItem, (ingredientItem) => ingredientItem.cocktail)
+  @OneToMany(
+    () => IngredientItem,
+    (ingredientItem) => ingredientItem.cocktail,
+    { cascade: true },
+  )
   ingredientItem: IngredientItem[];
 
   @OneToMany(() => Comment, (comment) => comment.cocktail)

@@ -5,7 +5,7 @@ import {
   OneToMany,
   Unique,
 } from 'typeorm';
-import { Cocktail } from '../cocktails/entities/cocktail.entity';
+import { Cocktail } from '../cocktails/cocktail.entity';
 import { Comment } from '../comments/comment.entity';
 import { Rating } from '../ratings/rating.entity';
 
