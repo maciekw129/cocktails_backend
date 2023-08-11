@@ -32,7 +32,7 @@ export class AuthService {
     });
     this.usersRepository.save(newUser);
 
-    const tokens = await this.getTokens(newUser.id, newUser.email);
+    const tokens = await this.getTokens(newUser.id);
     await this.updateRtHash(newUser.id, newUser.hashedRt);
 
     return tokens;
@@ -44,7 +44,7 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Wrong credentials');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id);
     await this.updateRtHash(user.id, user.hashedRt);
 
     return tokens;
@@ -63,7 +63,7 @@ export class AuthService {
     const rtMatches = bcrypt.compare(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('access denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id);
     await this.updateRtHash(user.id, user.hashedRt);
 
     return tokens;
@@ -73,12 +73,11 @@ export class AuthService {
     return bcrypt.hash(value, 10);
   }
 
-  private async getTokens(userId: number, email: string): Promise<Token> {
+  private async getTokens(userId: number): Promise<Token> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
-          email,
         },
         {
           secret: process.env.AT_SECRET,
@@ -88,7 +87,6 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           sub: userId,
-          email,
         },
         {
           secret: process.env.RT_SECRET,
