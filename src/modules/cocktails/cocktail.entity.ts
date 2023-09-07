@@ -9,6 +9,7 @@ import { IngredientItem } from '../ingredients/entities/ingredientItem.entity';
 import { User } from 'src/modules/users/user.entity';
 import { Comment } from 'src/modules/comments/comment.entity';
 import { Rating } from 'src/modules/ratings/rating.entity';
+import { PreparationStep } from '../preparation-step/preparation-step.entity';
 
 @Entity()
 export class Cocktail {
@@ -21,9 +22,6 @@ export class Cocktail {
   @Column()
   description: string;
 
-  @Column()
-  preparation: string;
-
   @ManyToOne(() => User, (user) => user.cocktails)
   author: User;
 
@@ -33,6 +31,12 @@ export class Cocktail {
     { cascade: true },
   )
   ingredientItem: IngredientItem[];
+
+  @OneToMany(
+    () => PreparationStep,
+    (preparationStep) => preparationStep.cocktail,
+  )
+  preparation: PreparationStep[];
 
   @OneToMany(() => Comment, (comment) => comment.cocktail)
   comments: Comment[];

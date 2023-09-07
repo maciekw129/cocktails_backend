@@ -2,11 +2,12 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/user.entity';
 import { Repository } from 'typeorm';
-import { RegisterDto } from './dto/registerDto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Token } from './auth.model';
+import { AuthApi, Token } from './auth.model';
 import { LoginDto } from './dto/loginDto';
+import { RegisterDto } from './dto/registerDto';
+import { UsersMappers } from '../modules/users/users.mappers';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async register(registerDto: RegisterDto) {
+  public async register(registerDto: RegisterDto): Promise<AuthApi> {
     const hashedPassword = await this.hashValue(registerDto.password);
 
     const user = await this.usersRepository.findBy({
@@ -30,16 +31,17 @@ export class AuthService {
       hashedRt: '',
       password: hashedPassword,
     });
-    this.usersRepository.save(newUser);
+    await this.usersRepository.save(newUser);
 
     const tokens = await this.getTokens(newUser.id);
     await this.updateRtHash(newUser.id, newUser.hashedRt);
 
-    return tokens;
+    return { tokens, user: UsersMappers.userToUserDto(newUser) };
   }
 
-  public async login({ email, password }: LoginDto): Promise<Token> {
-    const user = await this.usersRepository.findOneByOrFail({ email });
+  public async login({ email, password }: LoginDto): Promise<AuthApi> {
+    const user = await this.usersRepository.findOneBy({ email });
+    if (user === null) throw new ForbiddenException('User does not exist.');
 
     const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Wrong credentials');
@@ -47,17 +49,17 @@ export class AuthService {
     const tokens = await this.getTokens(user.id);
     await this.updateRtHash(user.id, user.hashedRt);
 
-    return tokens;
+    return { tokens, user: UsersMappers.userToUserDto(user) };
   }
 
   public async logout(userId: number) {
     const user = await this.usersRepository.findOneBy({ id: userId });
-    user.hashedRt = null;
+    user.hashedRt = '';
 
     this.usersRepository.save(user);
   }
 
-  public async refreshTokens(userId: number, rt: string) {
+  public async refreshTokens(userId: number, rt: string): Promise<AuthApi> {
     const user = await this.usersRepository.findOneBy({ id: userId });
 
     const rtMatches = bcrypt.compare(rt, user.hashedRt);
@@ -66,7 +68,7 @@ export class AuthService {
     const tokens = await this.getTokens(user.id);
     await this.updateRtHash(user.id, user.hashedRt);
 
-    return tokens;
+    return { tokens, user };
   }
 
   private hashValue(value: string) {
@@ -81,7 +83,7 @@ export class AuthService {
         },
         {
           secret: process.env.AT_SECRET,
-          expiresIn: 60 * 15,
+          expiresIn: 60 * 60,
         },
       ),
       this.jwtService.signAsync(

@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IngredientItem } from './ingredientItem.entity';
+import { PreparationStep } from '../../preparation-step/preparation-step.entity';
 
 @Entity()
 export class Ingredient {
@@ -18,4 +19,10 @@ export class Ingredient {
     { cascade: true },
   )
   ingredientItem: IngredientItem[];
+
+  @OneToMany(
+    () => PreparationStep,
+    (preparationStep) => preparationStep.ingredient,
+  )
+  preparationStep: PreparationStep[];
 }

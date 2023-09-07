@@ -4,8 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { CocktailDto } from './cocktails.model';
+import { CocktailDto, PreparationStepDto } from './cocktails.model';
 import { IngredientDto } from '../ingredients/ingredients.model';
+import { PreparationStepService } from '../preparation-step/preparation-step.service';
 
 @Injectable()
 export class CocktailsService {
@@ -13,6 +14,7 @@ export class CocktailsService {
     @InjectRepository(Cocktail)
     private cocktailRepository: Repository<Cocktail>,
     private ingredientsService: IngredientsService,
+    private preparationStepService: PreparationStepService,
     private usersService: UsersService,
   ) {}
 
@@ -36,10 +38,15 @@ export class CocktailsService {
         cocktail.ingredients,
       );
 
+    const preparationSteps =
+      await this.preparationStepService.generatePreparationSteps(
+        cocktail.preparation,
+      );
+
     const newCocktail = this.cocktailRepository.create({
       name: cocktail.name,
       description: cocktail.description,
-      preparation: cocktail.preparation,
+      preparation: preparationSteps,
       author: user,
       comments: [],
       ratings: [],
@@ -62,10 +69,20 @@ export class CocktailsService {
       },
     );
 
+    const preparationStepsDto: PreparationStepDto[] = cocktail.preparation.map(
+      (preparation) => {
+        return {
+          ingredient: preparation.ingredient.name,
+          action: preparation.action,
+          tip: preparation.tip,
+        };
+      },
+    );
+
     return {
       name: cocktail.name,
       description: cocktail.description,
-      preparation: cocktail.preparation,
+      preparation: preparationStepsDto,
       ingredients: ingredientsDto,
     };
   }

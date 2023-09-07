@@ -7,12 +7,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/registerDto';
-import { Token } from './auth.model';
 import { LoginDto } from './dto/loginDto';
 import { RtGuard } from './guards/rt.guard';
 import { GetCurrentUser } from 'src/shared/decorators/get-current-user.decorator';
 import { Public } from 'src/shared/decorators/public.decorator';
+import { AuthApi, Token } from './auth.model';
+import { RegisterDto } from './dto/registerDto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,14 +21,15 @@ export class AuthController {
   @Public()
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  registerLocal(@Body() registerDto: RegisterDto): Promise<Token> {
+  registerLocal(@Body() registerDto: RegisterDto): Promise<AuthApi> {
     return this.authService.register(registerDto);
   }
 
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  loginLocal(@Body() loginDto: LoginDto): Promise<Token> {
+  loginLocal(@Body() loginDto: LoginDto): Promise<AuthApi> {
+    console.log(loginDto);
     return this.authService.login(loginDto);
   }
 
@@ -45,7 +46,7 @@ export class AuthController {
   refreshTokens(
     @GetCurrentUser('sub') userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
-  ): Promise<Token> {
+  ): Promise<AuthApi> {
     return this.authService.refreshTokens(userId, refreshToken);
   }
 }

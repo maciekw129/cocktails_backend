@@ -15,6 +15,8 @@ import { IngredientItem } from './modules/ingredients/entities/ingredientItem.en
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './auth/guards/at.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { PreparationStepModule } from './modules/preparation-step/preparation-step.module';
+import { PreparationStep } from './modules/preparation-step/preparation-step.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,15 @@ import { APP_GUARD } from '@nestjs/core';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: 'cocktails_db',
-      entities: [User, Cocktail, Comment, Rating, Ingredient, IngredientItem],
+      entities: [
+        User,
+        Cocktail,
+        Comment,
+        Rating,
+        Ingredient,
+        IngredientItem,
+        PreparationStep,
+      ],
       synchronize: true,
     }),
     UsersModule,
@@ -34,6 +44,7 @@ import { APP_GUARD } from '@nestjs/core';
     CommentsModule,
     RatingsModule,
     IngredientsModule,
+    PreparationStepModule,
     AuthModule,
   ],
   controllers: [],
