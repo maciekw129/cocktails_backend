@@ -4,7 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { CocktailDto, PreparationStepDto } from './cocktails.model';
+import {
+  CocktailDto,
+  CocktailRequest,
+  PreparationStepDto,
+} from './cocktails.model';
 import { IngredientDto } from '../ingredients/ingredients.model';
 import { PreparationStepService } from '../preparation-step/preparation-step.service';
 
@@ -24,13 +28,16 @@ export class CocktailsService {
         ingredientItem: {
           ingredient: true,
         },
+        preparation: {
+          ingredient: true,
+        },
       },
     });
 
     return cocktails.map(this.mapCocktailToCocktailDto);
   }
 
-  public async createCocktail(cocktail: CocktailDto, userId: number) {
+  public async createCocktail(cocktail: CocktailRequest, userId: number) {
     const user = await this.usersService.findUserById(userId);
 
     const ingredientItems =
@@ -46,6 +53,8 @@ export class CocktailsService {
     const newCocktail = this.cocktailRepository.create({
       name: cocktail.name,
       description: cocktail.description,
+      category: cocktail.category,
+      difficulty: cocktail.difficulty,
       preparation: preparationSteps,
       author: user,
       comments: [],
@@ -53,8 +62,7 @@ export class CocktailsService {
       ingredientItem: ingredientItems,
     });
 
-    const savedCocktail = await this.cocktailRepository.save(newCocktail);
-    return this.mapCocktailToCocktailDto(savedCocktail);
+    return this.cocktailRepository.save(newCocktail);
   }
 
   private mapCocktailToCocktailDto(cocktail: Cocktail): CocktailDto {
@@ -72,6 +80,7 @@ export class CocktailsService {
     const preparationStepsDto: PreparationStepDto[] = cocktail.preparation.map(
       (preparation) => {
         return {
+          step: preparation.step,
           ingredient: preparation.ingredient.name,
           action: preparation.action,
           tip: preparation.tip,
@@ -80,8 +89,11 @@ export class CocktailsService {
     );
 
     return {
+      id: cocktail.id,
       name: cocktail.name,
       description: cocktail.description,
+      category: cocktail.category,
+      difficulty: cocktail.difficulty,
       preparation: preparationStepsDto,
       ingredients: ingredientsDto,
     };

@@ -17,12 +17,13 @@ export class PreparationStepService {
     const preparationStepArray: PreparationStep[] = [];
 
     for (const preparationStep of preparation) {
-      const { action, tip } = preparationStep;
+      const { step, action, tip } = preparationStep;
       const ingredient = await this.ingredientsService.findIngredientByName(
         preparationStep.ingredient,
       );
 
       const newPreparationStep = this.preparationStepRepository.create({
+        step,
         ingredient,
         action,
         tip,

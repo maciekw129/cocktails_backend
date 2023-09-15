@@ -1,6 +1,7 @@
 import { Ingredient } from 'src/modules/ingredients/entities/ingredient.entity';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Cocktail } from '../../cocktails/cocktail.entity';
+import { Unit } from '../ingredients.model';
 
 @Entity()
 export class IngredientItem {
@@ -8,7 +9,7 @@ export class IngredientItem {
   id: number;
 
   @Column()
-  unit: string;
+  unit: Unit;
 
   @Column()
   quantity: number;

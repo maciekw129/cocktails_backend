@@ -9,7 +9,8 @@ import {
 import { CocktailsService } from './cocktails.service';
 import { GetCurrentUser } from '../../shared/decorators/get-current-user.decorator';
 import { Public } from '../../shared/decorators/public.decorator';
-import { CocktailDto } from './cocktails.model';
+import { CocktailDto, CocktailRequest } from './cocktails.model';
+import { Cocktail } from './cocktail.entity';
 
 @Controller('cocktails')
 export class CocktailsController {
@@ -24,9 +25,9 @@ export class CocktailsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   createCocktail(
-    @Body() createCocktailDto: CocktailDto,
+    @Body() createCocktailDto: CocktailRequest,
     @GetCurrentUser('sub') userId,
-  ): Promise<CocktailDto> {
+  ): Promise<Cocktail> {
     return this.cocktailsService.createCocktail(createCocktailDto, userId);
   }
 }
