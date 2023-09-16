@@ -10,16 +10,19 @@ import { IngredientItem } from '../ingredients/entities/ingredientItem.entity';
 import { User } from 'src/modules/users/user.entity';
 import { Comment } from 'src/modules/comments/comment.entity';
 import { Rating } from 'src/modules/ratings/rating.entity';
-import { PreparationStep } from '../preparation-step/preparation-step.entity';
+import { PreparationStep } from '../preparation-steps/preparation-step.entity';
 import { Category, Difficulty } from './cocktails.model';
 
 @Entity()
 export class Cocktail {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   name: string;
+
+  @Column()
+  imageUrl: string;
 
   @Column()
   description: string;
@@ -52,6 +55,10 @@ export class Cocktail {
   @OneToMany(() => Rating, (rating) => rating.cocktail)
   ratings: Rating[];
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({
+    precision: null,
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createDate: Date;
 }

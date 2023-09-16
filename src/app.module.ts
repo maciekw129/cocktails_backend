@@ -15,8 +15,9 @@ import { IngredientItem } from './modules/ingredients/entities/ingredientItem.en
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './auth/guards/at.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { PreparationStepModule } from './modules/preparation-step/preparation-step.module';
-import { PreparationStep } from './modules/preparation-step/preparation-step.entity';
+import { PreparationStepsModule } from './modules/preparation-steps/preparation-steps.module';
+import { PreparationStep } from './modules/preparation-steps/preparation-step.entity';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { PreparationStep } from './modules/preparation-step/preparation-step.ent
       port: Number(process.env.DATABASE_PORT),
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
-      database: 'cocktails_db',
+      database: process.env.DATABASE_NAME,
       entities: [
         User,
         Cocktail,
@@ -44,7 +45,7 @@ import { PreparationStep } from './modules/preparation-step/preparation-step.ent
     CommentsModule,
     RatingsModule,
     IngredientsModule,
-    PreparationStepModule,
+    PreparationStepsModule,
     AuthModule,
   ],
   controllers: [],

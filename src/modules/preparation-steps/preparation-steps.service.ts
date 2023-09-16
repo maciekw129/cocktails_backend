@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { IngredientsService } from '../ingredients/ingredients.service';
 
 @Injectable()
-export class PreparationStepService {
+export class PreparationStepsService {
   constructor(
     @InjectRepository(PreparationStep)
     private preparationStepRepository: Repository<PreparationStep>,

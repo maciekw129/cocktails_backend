@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Ingredient } from '../ingredients/entities/ingredient.entity';
 import { Cocktail } from '../cocktails/cocktail.entity';
-import { Action } from './preparation-step.model';
+import { Action } from './preparation-steps.model';
 
 @Entity()
 export class PreparationStep {

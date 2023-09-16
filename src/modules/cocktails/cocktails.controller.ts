@@ -22,6 +22,13 @@ export class CocktailsController {
     return this.cocktailsService.getAllCocktails();
   }
 
+  @Public()
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  getCocktailById(@Body() id: string): Promise<CocktailDto> {
+    return this.cocktailsService.getCocktailById(id);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   createCocktail(

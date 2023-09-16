@@ -4,13 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import {
-  CocktailDto,
-  CocktailRequest,
-  PreparationStepDto,
-} from './cocktails.model';
-import { IngredientDto } from '../ingredients/ingredients.model';
-import { PreparationStepService } from '../preparation-step/preparation-step.service';
+import { CocktailRequest } from './cocktails.model';
+import { PreparationStepsService } from '../preparation-steps/preparation-steps.service';
+import { CocktailsMappers } from './cocktails.mappers';
 
 @Injectable()
 export class CocktailsService {
@@ -18,7 +14,7 @@ export class CocktailsService {
     @InjectRepository(Cocktail)
     private cocktailRepository: Repository<Cocktail>,
     private ingredientsService: IngredientsService,
-    private preparationStepService: PreparationStepService,
+    private preparationStepService: PreparationStepsService,
     private usersService: UsersService,
   ) {}
 
@@ -34,7 +30,15 @@ export class CocktailsService {
       },
     });
 
-    return cocktails.map(this.mapCocktailToCocktailDto);
+    return cocktails.map(CocktailsMappers.mapCocktailToCocktailDto);
+  }
+
+  public async getCocktailById(cocktailId: string) {
+    const cocktail = await this.cocktailRepository.findOneBy({
+      id: cocktailId,
+    });
+
+    return CocktailsMappers.mapCocktailToCocktailDto(cocktail);
   }
 
   public async createCocktail(cocktail: CocktailRequest, userId: number) {
@@ -53,6 +57,7 @@ export class CocktailsService {
     const newCocktail = this.cocktailRepository.create({
       name: cocktail.name,
       description: cocktail.description,
+      imageUrl: cocktail.imageUrl,
       category: cocktail.category,
       difficulty: cocktail.difficulty,
       preparation: preparationSteps,
@@ -63,39 +68,5 @@ export class CocktailsService {
     });
 
     return this.cocktailRepository.save(newCocktail);
-  }
-
-  private mapCocktailToCocktailDto(cocktail: Cocktail): CocktailDto {
-    const ingredientsDto: IngredientDto[] = cocktail.ingredientItem.map(
-      (ingredient) => {
-        return {
-          name: ingredient.ingredient.name,
-          quantity: ingredient.quantity,
-          unit: ingredient.unit,
-          isAlcoholic: ingredient.ingredient.isAlcoholic,
-        };
-      },
-    );
-
-    const preparationStepsDto: PreparationStepDto[] = cocktail.preparation.map(
-      (preparation) => {
-        return {
-          step: preparation.step,
-          ingredient: preparation.ingredient.name,
-          action: preparation.action,
-          tip: preparation.tip,
-        };
-      },
-    );
-
-    return {
-      id: cocktail.id,
-      name: cocktail.name,
-      description: cocktail.description,
-      category: cocktail.category,
-      difficulty: cocktail.difficulty,
-      preparation: preparationStepsDto,
-      ingredients: ingredientsDto,
-    };
   }
 }

@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IngredientItem } from './ingredientItem.entity';
-import { PreparationStep } from '../../preparation-step/preparation-step.entity';
+import { PreparationStep } from '../../preparation-steps/preparation-step.entity';
 
 @Entity()
 export class Ingredient {

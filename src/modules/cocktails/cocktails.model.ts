@@ -1,14 +1,17 @@
 import { IngredientDto } from '../ingredients/ingredients.model';
-import { Action } from '../preparation-step/preparation-step.model';
+import { Action } from '../preparation-steps/preparation-steps.model';
+import { UserDto } from '../users/dto/userDto';
 
 export interface CocktailDto {
-  id: number;
+  id: string;
   name: string;
   description: string;
+  imageUrl: string;
   category: Category;
   difficulty: Difficulty;
   preparation: PreparationStepDto[];
   ingredients: IngredientDto[];
+  author: UserDto;
 }
 
 export type CocktailRequest = Omit<CocktailDto, 'id'>;
