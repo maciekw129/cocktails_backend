@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IngredientsService } from '../ingredients/ingredients.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
@@ -27,16 +27,30 @@ export class CocktailsService {
         preparation: {
           ingredient: true,
         },
+        author: true,
       },
     });
 
     return cocktails.map(CocktailsMappers.mapCocktailToCocktailDto);
   }
 
-  public async getCocktailById(cocktailId: string) {
-    const cocktail = await this.cocktailRepository.findOneBy({
-      id: cocktailId,
+  public async getCocktailById(cocktailId: number) {
+    const cocktail = await this.cocktailRepository.findOne({
+      where: { id: cocktailId },
+      relations: {
+        ingredientItem: {
+          ingredient: true,
+        },
+        preparation: {
+          ingredient: true,
+        },
+        author: true,
+      },
     });
+
+    if (!cocktail) {
+      throw new NotFoundException('Cocktail not found');
+    }
 
     return CocktailsMappers.mapCocktailToCocktailDto(cocktail);
   }

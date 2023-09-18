@@ -3,7 +3,7 @@ import { Action } from '../preparation-steps/preparation-steps.model';
 import { UserDto } from '../users/dto/userDto';
 
 export interface CocktailDto {
-  id: string;
+  id: number;
   name: string;
   description: string;
   imageUrl: string;

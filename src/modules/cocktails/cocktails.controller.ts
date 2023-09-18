@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
 } from '@nestjs/common';
 import { CocktailsService } from './cocktails.service';
@@ -25,8 +26,8 @@ export class CocktailsController {
   @Public()
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  getCocktailById(@Body() id: string): Promise<CocktailDto> {
-    return this.cocktailsService.getCocktailById(id);
+  getCocktailById(@Param() { id }): Promise<CocktailDto> {
+    return this.cocktailsService.getCocktailById(Number(id));
   }
 
   @Post()

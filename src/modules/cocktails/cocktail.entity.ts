@@ -16,7 +16,7 @@ import { Category, Difficulty } from './cocktails.model';
 @Entity()
 export class Cocktail {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
