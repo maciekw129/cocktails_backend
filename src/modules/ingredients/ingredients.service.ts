@@ -26,10 +26,9 @@ export class IngredientsService {
         ingredient.name,
       );
 
-      const newIngredientItem = this.ingredientItemRepository.create({
-        unit: ingredient.unit,
-        quantity: ingredient.quantity,
-      });
+      const newIngredientItem = new IngredientItem();
+      newIngredientItem.unit = ingredient.unit;
+      newIngredientItem.quantity = ingredient.quantity;
 
       if (existingIngredient) {
         newIngredientItem.ingredient = existingIngredient;

@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { CocktailRequest } from './cocktails.model';
+import { CocktailRequest, Filters } from './cocktails.model';
 import { PreparationStepsService } from '../preparation-steps/preparation-steps.service';
 import { CocktailsMappers } from './cocktails.mappers';
 
@@ -18,20 +18,43 @@ export class CocktailsService {
     private usersService: UsersService,
   ) {}
 
-  public async getAllCocktails() {
-    const cocktails = await this.cocktailRepository.find({
-      relations: {
-        ingredientItem: {
-          ingredient: true,
-        },
-        preparation: {
-          ingredient: true,
-        },
-        author: true,
-      },
-    });
+  public async getAllCocktails(filters: Filters) {
+    const hasIngredientFilters = Boolean(filters.ingredients);
+    const cocktailsQuery = this.cocktailRepository
+      .createQueryBuilder('cocktail')
+      .leftJoinAndSelect('cocktail.ingredientItem', 'ingredientItem')
+      .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
+      .where('cocktail.name like :name', { name: `%${filters.name ?? ''}%` });
 
-    return cocktails.map(CocktailsMappers.mapCocktailToCocktailDto);
+    if (filters.difficulty) {
+      cocktailsQuery.andWhere(`difficulty = ${filters.difficulty}`);
+    }
+
+    if (filters.category) {
+      cocktailsQuery.andWhere(`category = ${filters.category}`);
+    }
+
+    if (hasIngredientFilters) {
+      if (!Array.isArray(filters.ingredients))
+        filters.ingredients = [filters.ingredients];
+
+      filters.ingredients.forEach((ingredient, index) => {
+        index === 0
+          ? cocktailsQuery.andWhere(`ingredient.name = '${ingredient}'`)
+          : cocktailsQuery.orWhere(`ingredient.name = '${ingredient}'`);
+      });
+    }
+
+    let cocktails = await cocktailsQuery.getMany();
+
+    if (hasIngredientFilters) {
+      cocktails = cocktails.filter(
+        ({ ingredientItem }) =>
+          ingredientItem.length === filters.ingredients.length,
+      );
+    }
+
+    return cocktails.map(CocktailsMappers.mapCocktailToCocktailListItemDto);
   }
 
   public async getCocktailById(cocktailId: number) {

@@ -1,5 +1,9 @@
 import { Cocktail } from './cocktail.entity';
-import { CocktailDto, PreparationStepDto } from './cocktails.model';
+import {
+  CocktailDto,
+  CocktailListItemDto,
+  PreparationStepDto,
+} from './cocktails.model';
 import { IngredientDto } from '../ingredients/ingredients.model';
 import { IngredientsMappers } from '../ingredients/ingredients.mappers';
 import { PreparaionStepsMappers } from '../preparation-steps/preparaion-steps.mappers';
@@ -28,6 +32,24 @@ export class CocktailsMappers {
       preparation: preparationStepsDto,
       ingredients: ingredientsDto,
       author: authorDto,
+    };
+  }
+
+  public static mapCocktailToCocktailListItemDto(
+    cocktail: Cocktail,
+  ): CocktailListItemDto {
+    const ingredientsDto: IngredientDto[] = cocktail.ingredientItem.map(
+      IngredientsMappers.mapIngredientItemToIngredientDto,
+    );
+
+    return {
+      id: cocktail.id,
+      name: cocktail.name,
+      description: cocktail.description,
+      imageUrl: cocktail.imageUrl,
+      category: cocktail.category,
+      difficulty: cocktail.difficulty,
+      ingredients: ingredientsDto,
     };
   }
 }

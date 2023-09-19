@@ -6,11 +6,17 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CocktailsService } from './cocktails.service';
 import { GetCurrentUser } from '../../shared/decorators/get-current-user.decorator';
 import { Public } from '../../shared/decorators/public.decorator';
-import { CocktailDto, CocktailRequest } from './cocktails.model';
+import {
+  CocktailDto,
+  CocktailListItemDto,
+  CocktailRequest,
+  Filters,
+} from './cocktails.model';
 import { Cocktail } from './cocktail.entity';
 
 @Controller('cocktails')
@@ -19,8 +25,8 @@ export class CocktailsController {
   @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAllCocktails(): Promise<CocktailDto[]> {
-    return this.cocktailsService.getAllCocktails();
+  getAllCocktails(@Query() params: Filters): Promise<CocktailListItemDto[]> {
+    return this.cocktailsService.getAllCocktails(params);
   }
 
   @Public()

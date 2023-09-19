@@ -14,6 +14,8 @@ export interface CocktailDto {
   author: UserDto;
 }
 
+export type CocktailListItemDto = Omit<CocktailDto, 'author' | 'preparation'>;
+
 export type CocktailRequest = Omit<CocktailDto, 'id'>;
 
 export interface PreparationStepDto {
@@ -34,4 +36,11 @@ export enum Difficulty {
   easy = 1,
   medium = 2,
   hard = 3,
+}
+
+export interface Filters {
+  name: string;
+  category: string;
+  difficulty: string;
+  ingredients: string[];
 }
