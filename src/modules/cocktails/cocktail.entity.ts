@@ -21,10 +21,10 @@ export class Cocktail {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ length: 500 })
   imageUrl: string;
 
-  @Column()
+  @Column({ length: 5000 })
   description: string;
 
   @Column()

@@ -15,9 +15,10 @@ import {
   CocktailDto,
   CocktailListItemDto,
   CocktailRequest,
-  Filters,
+  CocktailsParams,
 } from './cocktails.model';
 import { Cocktail } from './cocktail.entity';
+import { PageDto } from '../../shared/pagination/pageDto';
 
 @Controller('cocktails')
 export class CocktailsController {
@@ -25,7 +26,9 @@ export class CocktailsController {
   @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAllCocktails(@Query() params: Filters): Promise<CocktailListItemDto[]> {
+  getAllCocktails(
+    @Query() params: CocktailsParams,
+  ): Promise<PageDto<CocktailListItemDto>> {
     return this.cocktailsService.getAllCocktails(params);
   }
 

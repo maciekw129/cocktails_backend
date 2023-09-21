@@ -1,6 +1,7 @@
 import { IngredientDto } from '../ingredients/ingredients.model';
 import { Action } from '../preparation-steps/preparation-steps.model';
 import { UserDto } from '../users/dto/userDto';
+import { PageOptionsDto } from '../../shared/pagination/PageOptionsDto';
 
 export interface CocktailDto {
   id: number;
@@ -38,7 +39,7 @@ export enum Difficulty {
   hard = 3,
 }
 
-export interface Filters {
+export interface CocktailsParams extends PageOptionsDto {
   name: string;
   category: string;
   difficulty: string;

@@ -11,7 +11,7 @@ export class IngredientItem {
   @Column()
   unit: Unit;
 
-  @Column()
+  @Column('decimal', { precision: 6, scale: 2 })
   quantity: number;
 
   @ManyToOne(() => Cocktail, (cocktail) => cocktail.ingredientItem)

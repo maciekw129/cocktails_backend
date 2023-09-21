@@ -4,9 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import { CocktailRequest, Filters } from './cocktails.model';
+import {
+  CocktailListItemDto,
+  CocktailRequest,
+  CocktailsParams,
+} from './cocktails.model';
 import { PreparationStepsService } from '../preparation-steps/preparation-steps.service';
 import { CocktailsMappers } from './cocktails.mappers';
+import { PageMetaDto } from '../../shared/pagination/pageMetaDto';
+import { PageDto } from '../../shared/pagination/pageDto';
 
 @Injectable()
 export class CocktailsService {
@@ -18,27 +24,32 @@ export class CocktailsService {
     private usersService: UsersService,
   ) {}
 
-  public async getAllCocktails(filters: Filters) {
-    const hasIngredientFilters = Boolean(filters.ingredients);
+  public async getAllCocktails({
+    name,
+    category,
+    difficulty,
+    ingredients,
+    ...pageOptionsDto
+  }: CocktailsParams): Promise<PageDto<CocktailListItemDto>> {
+    const hasIngredientFilters = Boolean(ingredients);
     const cocktailsQuery = this.cocktailRepository
       .createQueryBuilder('cocktail')
       .leftJoinAndSelect('cocktail.ingredientItem', 'ingredientItem')
       .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
-      .where('cocktail.name like :name', { name: `%${filters.name ?? ''}%` });
+      .where('cocktail.name like :name', { name: `%${name ?? ''}%` });
 
-    if (filters.difficulty) {
-      cocktailsQuery.andWhere(`difficulty = ${filters.difficulty}`);
+    if (difficulty) {
+      cocktailsQuery.andWhere(`difficulty = ${difficulty}`);
     }
 
-    if (filters.category) {
-      cocktailsQuery.andWhere(`category = ${filters.category}`);
+    if (category) {
+      cocktailsQuery.andWhere(`category = ${category}`);
     }
 
     if (hasIngredientFilters) {
-      if (!Array.isArray(filters.ingredients))
-        filters.ingredients = [filters.ingredients];
+      if (!Array.isArray(ingredients)) ingredients = [ingredients];
 
-      filters.ingredients.forEach((ingredient, index) => {
+      ingredients.forEach((ingredient, index) => {
         index === 0
           ? cocktailsQuery.andWhere(`ingredient.name = '${ingredient}'`)
           : cocktailsQuery.orWhere(`ingredient.name = '${ingredient}'`);
@@ -49,12 +60,19 @@ export class CocktailsService {
 
     if (hasIngredientFilters) {
       cocktails = cocktails.filter(
-        ({ ingredientItem }) =>
-          ingredientItem.length === filters.ingredients.length,
+        ({ ingredientItem }) => ingredientItem.length === ingredients.length,
       );
     }
 
-    return cocktails.map(CocktailsMappers.mapCocktailToCocktailListItemDto);
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto,
+      itemCount: cocktails.length,
+    });
+
+    return new PageDto(
+      cocktails.map(CocktailsMappers.mapCocktailToCocktailListItemDto),
+      pageMetaDto,
+    );
   }
 
   public async getCocktailById(cocktailId: number) {

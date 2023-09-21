@@ -7,7 +7,7 @@ export class PreparaionStepsMappers {
   ): PreparationStepDto {
     return {
       step: preparationStep.step,
-      ingredient: preparationStep.ingredient.name,
+      ingredient: preparationStep.ingredient?.name,
       action: preparationStep.action,
       tip: preparationStep.tip,
     };
