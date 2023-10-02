@@ -15,7 +15,7 @@ export interface CocktailDto {
   author: UserDto;
 }
 
-export type CocktailListItemDto = Omit<CocktailDto, 'author' | 'preparation'>;
+export type CocktailListItemDto = Omit<CocktailDto, 'preparation'>;
 
 export type CocktailRequest = Omit<CocktailDto, 'id'>;
 
@@ -44,4 +44,5 @@ export interface CocktailsParams extends PageOptionsDto {
   category: string;
   difficulty: string;
   ingredients: string[];
+  userId: string;
 }

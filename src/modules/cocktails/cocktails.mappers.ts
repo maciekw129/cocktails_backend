@@ -42,6 +42,8 @@ export class CocktailsMappers {
       IngredientsMappers.mapIngredientItemToIngredientDto,
     );
 
+    const userDto: UserDto = UsersMappers.userToUserDto(cocktail.author);
+
     return {
       id: cocktail.id,
       name: cocktail.name,
@@ -50,6 +52,7 @@ export class CocktailsMappers {
       category: cocktail.category,
       difficulty: cocktail.difficulty,
       ingredients: ingredientsDto,
+      author: userDto,
     };
   }
 }

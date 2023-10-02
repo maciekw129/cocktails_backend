@@ -29,6 +29,7 @@ export class CocktailsService {
     category,
     difficulty,
     ingredients,
+    userId,
     ...pageOptionsDto
   }: CocktailsParams): Promise<PageDto<CocktailListItemDto>> {
     const hasIngredientFilters = Boolean(ingredients);
@@ -36,6 +37,7 @@ export class CocktailsService {
       .createQueryBuilder('cocktail')
       .leftJoinAndSelect('cocktail.ingredientItem', 'ingredientItem')
       .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
+      .leftJoinAndSelect('cocktail.author', 'author')
       .where('cocktail.name like :name', { name: `%${name ?? ''}%` });
 
     if (difficulty) {
@@ -44,6 +46,10 @@ export class CocktailsService {
 
     if (category) {
       cocktailsQuery.andWhere(`category = ${category}`);
+    }
+
+    if (userId) {
+      cocktailsQuery.andWhere(`author.id = ${userId}`);
     }
 
     if (hasIngredientFilters) {
