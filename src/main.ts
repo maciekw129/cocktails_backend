@@ -10,6 +10,6 @@ async function bootstrap() {
     origin: ['http://localhost:4200'],
     methods: ['GET', 'POST', 'PATCH'],
   });
-  await app.listen(3000);
+  await app.listen(10000);
 }
 bootstrap();
