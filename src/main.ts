@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api/v1/');
   app.enableCors({
-    origin: [process.env.FRONT_URL],
+    origin: ["https://cocktails-front.vercel.app"],
     methods: ['GET', 'POST', 'PATCH'],
   });
   await app.listen(10000);
