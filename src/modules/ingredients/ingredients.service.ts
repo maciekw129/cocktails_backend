@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Ingredient } from './entities/ingredient.entity';
 import { Repository } from 'typeorm';
 import { IngredientItem } from './entities/ingredientItem.entity';
-import { IngredientDto } from './ingredients.model';
+import {IngredientDto} from "./dtos/ingredientDto";
 
 @Injectable()
 export class IngredientsService {
@@ -14,11 +14,13 @@ export class IngredientsService {
     private ingredientItemRepository: Repository<IngredientItem>,
   ) {}
 
-  public getAllIngredients() {
-    return this.ingredientsRepository.findBy({});
+  public getAllIngredients(): Promise<Ingredient[]> {
+    return this.ingredientsRepository
+      .createQueryBuilder()
+      .getMany()
   }
 
-  public async generateIngredientItems(ingredients: IngredientDto[]) {
+  public async generateIngredientItems(ingredients: IngredientDto[]): Promise<IngredientItem[]> {
     const ingredientsItemsArray: IngredientItem[] = [];
 
     for (const ingredient of ingredients) {
@@ -46,11 +48,14 @@ export class IngredientsService {
     return ingredientsItemsArray;
   }
 
-  public findIngredientByName(name: string) {
-    return this.ingredientsRepository.findOneBy({ name });
+  public findIngredientByName(name: string): Promise<Ingredient> {
+    return this.ingredientsRepository
+      .createQueryBuilder('ingredient')
+      .where('ingredient.name like :name', { name })
+      .getOne()
   }
 
-  private addIngredient(name: string, isAlcoholic: boolean) {
+  private addIngredient(name: string, isAlcoholic: boolean): Promise<Ingredient> {
     const newCocktail = this.ingredientsRepository.create({
       name,
       isAlcoholic,

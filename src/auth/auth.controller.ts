@@ -9,10 +9,10 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/loginDto';
 import { RtGuard } from './guards/rt.guard';
-import { GetCurrentUser } from 'src/shared/decorators/get-current-user.decorator';
-import { Public } from 'src/shared/decorators/public.decorator';
 import { AuthApi, Token } from './auth.model';
 import { RegisterDto } from './dto/registerDto';
+import {Public} from "../shared/decorators/public.decorator";
+import {GetCurrentUser} from "../shared/decorators/get-current-user.decorator";
 
 @Controller('auth')
 export class AuthController {

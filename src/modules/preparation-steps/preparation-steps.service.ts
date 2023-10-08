@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PreparationStepDto } from '../cocktails/cocktails.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PreparationStep } from './preparation-step.entity';
 import { Repository } from 'typeorm';
 import { IngredientsService } from '../ingredients/ingredients.service';
+import {PreparationStepDto} from "./dto/preparationStepDto";
 
 @Injectable()
 export class PreparationStepsService {

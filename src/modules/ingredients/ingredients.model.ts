@@ -1,10 +1,3 @@
-export interface IngredientDto {
-  name: string;
-  quantity: number;
-  unit: Unit;
-  isAlcoholic: boolean;
-}
-
 export enum Unit {
   g = 1,
   ml = 2,

@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Cocktail } from '../cocktails/cocktail.entity';
 import { User } from '../users/user.entity';
+import { Cocktail } from '../cocktails/cocktail.entity';
 
 @Entity()
 export class Comment {

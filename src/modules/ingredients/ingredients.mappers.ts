@@ -1,5 +1,5 @@
 import { IngredientItem } from './entities/ingredientItem.entity';
-import { IngredientDto } from './ingredients.model';
+import {IngredientDto} from "./dtos/ingredientDto";
 
 export class IngredientsMappers {
   public static mapIngredientItemToIngredientDto(

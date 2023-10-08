@@ -1,3 +1,6 @@
+INSERT INTO user (id, login, firstName, lastName, email, password, createdAt)
+VALUES (1, 'admin', 'Maciej', 'Walecki', 'admin@email.com', '$2b$10$QLW7v2wId.LmSvuTiCjsIOapeUUJaVzU.SHixMRiYQ2TPTMoN3rPS', '2023-09-19 00:00:00');
+
 INSERT INTO ingredient (id, name, isAlcoholic)
 VALUES
     (1, 'Rum', true),
@@ -17,7 +20,10 @@ VALUES
     (15, 'Raspberry syrup', false),
     (16, 'Tabasco', false),
     (17, 'Orange juice', false),
-    (18, 'Grenadine', false);
+    (18, 'Grenadine', false),
+    (19, 'Lime juice', false),
+    (20, 'Sugar syrup', false),
+    (21, 'Peach liqueur', true);
 
 INSERT INTO cocktail (id, name, imageUrl, description, category, difficulty, createDate, authorId)
 VALUES
@@ -90,6 +96,26 @@ VALUES
         3,
         '2023-09-19 00:00:00',
         1
+    ),
+    (
+        8,
+        'Daiquiri',
+        'https://www.liquor.com/thmb/aLlM1JQiNiu0o2Mwx2n2AfOgoyw=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Daiquiri_3000x3000_primary-206eb2330cb04852ab7d780dcf3d55ef.jpg',
+        'The daiquiri is a cocktail whose main ingredients are rum, citrus juice (typically lime juice), and sugar or other sweetener. The daiquiri is one of the six basic drinks listed in David A. Emburys classic The Fine Art of Mixing Drinks, which also lists some variations.',
+        2,
+        2,
+        '2023-09-19 00:00:00',
+        1
+    ),
+    (
+        9,
+        'Sex on the Beach',
+        'https://cdn.aniagotuje.com/pictures/articles/2023/06/44049703-v-1080x1080.jpg',
+        'A sex on the beach is an alcoholic cocktail containing vodka, peach schnapps, orange juice and cranberry juice. It is an International Bartenders Association Official Cocktail.',
+        3,
+        1,
+        '2023-09-19 00:00:00',
+        1
     );
 
 INSERT INTO ingredient_item (unit, quantity, cocktailId, ingredientId)
@@ -121,7 +147,16 @@ VALUES
     (2, 40, 7, 13),
     (2, 200, 7, 17),
     (7, 1, 7, 18),
-    (5, 0.5, 7, 4);
+    (5, 0.5, 7, 4),
+    (2, 40, 8, 1),
+    (2, 20, 8, 19),
+    (2, 5, 8, 20),
+    (4, 3, 8, 4),
+    (2, 40, 9, 8),
+    (2, 20, 9, 21),
+    (2, 40, 9, 17),
+    (2, 40, 9, 12),
+    (5, 0.5, 9, 4);
 
 INSERT INTO preparation_step (step, action, tip, ingredientId, cocktailId)
 VALUES
@@ -155,4 +190,15 @@ VALUES
     (2, 'POUR', '', 13, 7),
     (3, 'POUR', '', 17, 7),
     (4, 'MIX', 'with spoon', null, 7),
-    (5, 'ADD', 'which should sink to the bottom', 18, 7);
+    (5, 'ADD', 'which should sink to the bottom', 18, 7),
+    (1, 'ADD', 'to shaker', 4, 8),
+    (2, 'POUR', '', 1, 8),
+    (3, 'POUR', '', 19, 8),
+    (4, 'POUR', '', 20, 8),
+    (5, 'SHAKE', 'everything together', null, 8),
+    (1, 'ADD', 'to shaker', 4, 9),
+    (2, 'POUR', '', 8, 9),
+    (3, 'POUR', '', 21, 9),
+    (4, 'POUR', '', 17, 9),
+    (5, 'POUR', '', 12, 9),
+    (6, 'SHAKE', 'everything together', null, 9);

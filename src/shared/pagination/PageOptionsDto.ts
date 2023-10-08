@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { Order } from './page.model';
 
 export class PageOptionsDto {
@@ -11,9 +11,12 @@ export class PageOptionsDto {
   @IsOptional()
   readonly page?: number = 1;
 
-  @IsInt()
-  @Min(1)
-  @Max(50)
-  @IsOptional()
-  readonly take?: number = 10;
+  constructor(page?: number, order?: Order) {
+    if (page) this.page = page;
+    if (order) this.order = order;
+  }
+
+  get skip() {
+    return (this.page - 1) * 10;
+  }
 }

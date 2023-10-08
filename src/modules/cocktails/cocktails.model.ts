@@ -1,31 +1,3 @@
-import { IngredientDto } from '../ingredients/ingredients.model';
-import { Action } from '../preparation-steps/preparation-steps.model';
-import { UserDto } from '../users/dto/userDto';
-import { PageOptionsDto } from '../../shared/pagination/PageOptionsDto';
-
-export interface CocktailDto {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  category: Category;
-  difficulty: Difficulty;
-  preparation: PreparationStepDto[];
-  ingredients: IngredientDto[];
-  author: UserDto;
-}
-
-export type CocktailListItemDto = Omit<CocktailDto, 'preparation'>;
-
-export type CocktailRequest = Omit<CocktailDto, 'id'>;
-
-export interface PreparationStepDto {
-  step: number;
-  ingredient: string;
-  action: Action;
-  tip: string;
-}
-
 export enum Category {
   shot = 1,
   short = 2,
@@ -39,10 +11,11 @@ export enum Difficulty {
   hard = 3,
 }
 
-export interface CocktailsParams extends PageOptionsDto {
+export interface CocktailsParams {
   name: string;
   category: string;
   difficulty: string;
   ingredients: string[];
   userId: string;
+  page: number;
 }

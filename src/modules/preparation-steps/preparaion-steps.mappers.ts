@@ -1,5 +1,5 @@
 import { PreparationStep } from './preparation-step.entity';
-import { PreparationStepDto } from '../cocktails/cocktails.model';
+import {PreparationStepDto} from "./dto/preparationStepDto";
 
 export class PreparaionStepsMappers {
   public static mapPreparationStepToPreparationStepDto(

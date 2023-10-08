@@ -1,6 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/modules/users/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -8,6 +7,7 @@ import { AuthApi, Token } from './auth.model';
 import { LoginDto } from './dto/loginDto';
 import { RegisterDto } from './dto/registerDto';
 import { UsersMappers } from '../modules/users/users.mappers';
+import {User} from "../modules/users/user.entity";
 
 @Injectable()
 export class AuthService {

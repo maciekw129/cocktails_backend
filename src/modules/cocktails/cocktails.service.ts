@@ -5,14 +5,15 @@ import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import {
-  CocktailListItemDto,
-  CocktailRequest,
   CocktailsParams,
 } from './cocktails.model';
 import { PreparationStepsService } from '../preparation-steps/preparation-steps.service';
 import { CocktailsMappers } from './cocktails.mappers';
 import { PageMetaDto } from '../../shared/pagination/pageMetaDto';
 import { PageDto } from '../../shared/pagination/pageDto';
+import {CreateCocktailDto} from "./dto/createCocktailDto";
+import {CocktailListItemDto} from "./dto/cocktailListItemDto";
+import {PageOptionsDto} from "../../shared/pagination/PageOptionsDto";
 
 @Injectable()
 export class CocktailsService {
@@ -30,14 +31,18 @@ export class CocktailsService {
     difficulty,
     ingredients,
     userId,
-    ...pageOptionsDto
+    page
   }: CocktailsParams): Promise<PageDto<CocktailListItemDto>> {
     const hasIngredientFilters = Boolean(ingredients);
+    const pageOptionsDto = new PageOptionsDto(page);
+
     const cocktailsQuery = this.cocktailRepository
       .createQueryBuilder('cocktail')
       .leftJoinAndSelect('cocktail.ingredientItem', 'ingredientItem')
       .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
       .leftJoinAndSelect('cocktail.author', 'author')
+      .skip(pageOptionsDto.skip)
+      .take(10)
       .where('cocktail.name like :name', { name: `%${name ?? ''}%` });
 
     if (difficulty) {
@@ -70,9 +75,10 @@ export class CocktailsService {
       );
     }
 
+    const itemCount = await cocktailsQuery.getCount();
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto,
-      itemCount: cocktails.length,
+      itemCount,
     });
 
     return new PageDto(
@@ -82,18 +88,14 @@ export class CocktailsService {
   }
 
   public async getCocktailById(cocktailId: number) {
-    const cocktail = await this.cocktailRepository.findOne({
-      where: { id: cocktailId },
-      relations: {
-        ingredientItem: {
-          ingredient: true,
-        },
-        preparation: {
-          ingredient: true,
-        },
-        author: true,
-      },
-    });
+    const cocktail = await this.cocktailRepository
+      .createQueryBuilder('cocktail')
+      .leftJoinAndSelect('cocktail.ingredientItem', 'ingredientItem')
+      .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
+      .leftJoinAndSelect('cocktail.author', 'author')
+      .leftJoinAndSelect('cocktail.preparation', 'preparation')
+      .where('cocktail.id like :id', { id: cocktailId })
+      .getOne()
 
     if (!cocktail) {
       throw new NotFoundException('Cocktail not found');
@@ -102,7 +104,7 @@ export class CocktailsService {
     return CocktailsMappers.mapCocktailToCocktailDto(cocktail);
   }
 
-  public async createCocktail(cocktail: CocktailRequest, userId: number) {
+  public async createCocktail(cocktail: CreateCocktailDto, userId: number) {
     const user = await this.usersService.findUserById(userId);
 
     const ingredientItems =

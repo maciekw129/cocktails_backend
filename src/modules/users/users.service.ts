@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UsersMappers } from './users.mappers';
-import { UserDto } from './dto/userDto';
 import { PatchUserDto } from './dto/patchUserDto';
 
 @Injectable()

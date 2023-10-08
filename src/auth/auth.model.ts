@@ -1,4 +1,3 @@
-import { User } from '../modules/users/user.entity';
 import { UserDto } from "../modules/users/dto/userDto";
 
 export interface Token {

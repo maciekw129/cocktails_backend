@@ -7,11 +7,11 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { IngredientItem } from '../ingredients/entities/ingredientItem.entity';
-import { User } from 'src/modules/users/user.entity';
-import { Comment } from 'src/modules/comments/comment.entity';
-import { Rating } from 'src/modules/ratings/rating.entity';
 import { PreparationStep } from '../preparation-steps/preparation-step.entity';
 import { Category, Difficulty } from './cocktails.model';
+import {User} from "../users/user.entity";
+import {Comment} from "../comments/comment.entity";
+import {Rating} from "../ratings/rating.entity";
 
 @Entity()
 export class Cocktail {
@@ -27,10 +27,10 @@ export class Cocktail {
   @Column({ length: 5000 })
   description: string;
 
-  @Column()
+  @Column({type: 'varchar'})
   category: Category;
 
-  @Column()
+  @Column({type: 'varchar'})
   difficulty: Difficulty;
 
   @ManyToOne(() => User, (user) => user.cocktails)

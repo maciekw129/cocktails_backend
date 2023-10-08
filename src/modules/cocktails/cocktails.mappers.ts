@@ -1,14 +1,12 @@
 import { Cocktail } from './cocktail.entity';
-import {
-  CocktailDto,
-  CocktailListItemDto,
-  PreparationStepDto,
-} from './cocktails.model';
-import { IngredientDto } from '../ingredients/ingredients.model';
 import { IngredientsMappers } from '../ingredients/ingredients.mappers';
 import { PreparaionStepsMappers } from '../preparation-steps/preparaion-steps.mappers';
 import { UserDto } from '../users/dto/userDto';
 import { UsersMappers } from '../users/users.mappers';
+import {CocktailDto} from "./dto/cocktailDto";
+import {PreparationStepDto} from "../preparation-steps/dto/preparationStepDto";
+import {CocktailListItemDto} from "./dto/cocktailListItemDto";
+import {IngredientDto} from "../ingredients/dtos/ingredientDto";
 
 export class CocktailsMappers {
   public static mapCocktailToCocktailDto(cocktail: Cocktail): CocktailDto {
@@ -38,10 +36,6 @@ export class CocktailsMappers {
   public static mapCocktailToCocktailListItemDto(
     cocktail: Cocktail,
   ): CocktailListItemDto {
-    const ingredientsDto: IngredientDto[] = cocktail.ingredientItem.map(
-      IngredientsMappers.mapIngredientItemToIngredientDto,
-    );
-
     const userDto: UserDto = UsersMappers.userToUserDto(cocktail.author);
 
     return {
@@ -51,7 +45,6 @@ export class CocktailsMappers {
       imageUrl: cocktail.imageUrl,
       category: cocktail.category,
       difficulty: cocktail.difficulty,
-      ingredients: ingredientsDto,
       author: userDto,
     };
   }

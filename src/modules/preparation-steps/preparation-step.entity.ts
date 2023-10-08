@@ -14,7 +14,7 @@ export class PreparationStep {
   @ManyToOne(() => Ingredient, (ingredient) => ingredient.preparationStep)
   ingredient: Ingredient;
 
-  @Column()
+  @Column({type: 'varchar'})
   action: Action;
 
   @Column()
