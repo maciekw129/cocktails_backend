@@ -6,9 +6,10 @@ import { AtStrategy } from './strategies/at.strategy';
 import { RtStrategy } from './strategies/rt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import {User} from "../modules/users/user.entity";
+import {ConfigModule} from "@nestjs/config";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({})],
+  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({}), ConfigModule],
   controllers: [AuthController],
   providers: [AuthService, AtStrategy, RtStrategy],
 })
