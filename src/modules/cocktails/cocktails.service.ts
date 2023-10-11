@@ -4,16 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Cocktail } from './cocktail.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
-import {
-  CocktailsParams,
-} from './cocktails.model';
+import { CocktailsParams } from './cocktails.model';
 import { PreparationStepsService } from '../preparation-steps/preparation-steps.service';
 import { CocktailsMappers } from './cocktails.mappers';
 import { PageMetaDto } from '../../shared/pagination/pageMetaDto';
 import { PageDto } from '../../shared/pagination/pageDto';
-import {CreateCocktailDto} from "./dto/createCocktailDto";
-import {CocktailListItemDto} from "./dto/cocktailListItemDto";
-import {PageOptionsDto} from "../../shared/pagination/PageOptionsDto";
+import { CreateCocktailDto } from './dto/createCocktailDto';
+import { CocktailListItemDto } from './dto/cocktailListItemDto';
+import { PageOptionsDto } from '../../shared/pagination/PageOptionsDto';
 
 @Injectable()
 export class CocktailsService {
@@ -31,7 +29,7 @@ export class CocktailsService {
     difficulty,
     ingredients,
     userId,
-    page
+    page,
   }: CocktailsParams): Promise<PageDto<CocktailListItemDto>> {
     const hasIngredientFilters = Boolean(ingredients);
     const pageOptionsDto = new PageOptionsDto(page);
@@ -94,8 +92,9 @@ export class CocktailsService {
       .leftJoinAndSelect('ingredientItem.ingredient', 'ingredient')
       .leftJoinAndSelect('cocktail.author', 'author')
       .leftJoinAndSelect('cocktail.preparation', 'preparation')
+      .leftJoinAndSelect('preparation.ingredient', 'preparationIngredient')
       .where('cocktail.id like :id', { id: cocktailId })
-      .getOne()
+      .getOne();
 
     if (!cocktail) {
       throw new NotFoundException('Cocktail not found');
